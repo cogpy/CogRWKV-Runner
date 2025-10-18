@@ -61,7 +61,7 @@ from utils.rwkv import *
 from utils.torch import *
 from utils.ngrok import *
 from utils.log import log_middleware
-from routes import completion, config, state_cache, midi, misc, file_process
+from routes import completion, config, state_cache, midi, misc, file_process, opencog_integration
 import global_var
 
 
@@ -87,6 +87,7 @@ app.include_router(midi.router)
 app.include_router(file_process.router)
 app.include_router(misc.router)
 app.include_router(state_cache.router)
+app.include_router(opencog_integration.router)
 
 
 @app.post("/exit", tags=["Root"])
