@@ -11,8 +11,8 @@ from enum import Enum
 from datetime import datetime, timedelta
 import numpy as np
 
-from .atomspace import AtomSpace, Atom, AtomType
-from .metta_bridge import MeTTaInterpreter, MeTTaExpression
+from core.atomspace import AtomSpace, Atom, AtomType
+from core.metta_bridge import MeTTaInterpreter, MeTTaExpression
 
 
 class AgentState(Enum):

@@ -11,10 +11,10 @@ from datetime import datetime, timedelta
 from fastapi import APIRouter, HTTPException, BackgroundTasks, status
 from pydantic import BaseModel, Field
 
-from ..core.atomspace import AtomSpace, Atom, AtomType
-from ..core.metta_bridge import MeTTaInterpreter
-from ..core.cognitive_agent import CognitiveAgent, Goal, GoalType, AgentState
-from ..utils.rwkv_interface import RWKVCognitiveInterface, GenerationRequest
+from core.atomspace import AtomSpace, Atom, AtomType
+from core.metta_bridge import MeTTaInterpreter
+from core.cognitive_agent import CognitiveAgent, Goal, GoalType, AgentState
+from utils.rwkv_interface import RWKVCognitiveInterface, GenerationRequest
 
 
 # API Models
@@ -67,8 +67,7 @@ rwkv_interface = RWKVCognitiveInterface()
 metta_interpreter = MeTTaInterpreter(atomspace, rwkv_interface)
 cognitive_agent = CognitiveAgent("main_agent", atomspace, metta_interpreter, rwkv_interface)
 
-# Initialize RWKV interface
-asyncio.create_task(rwkv_interface.initialize())
+# RWKV interface will be initialized in lifespan
 
 
 @router.get("/opencog/status", tags=["OpenCog"])
@@ -92,11 +91,11 @@ async def get_opencog_status():
 async def create_atom(request: AtomRequest):
     """Create a new atom in the atomspace"""
     try:
-        atom_type = AtomType(request.type.upper())
-    except ValueError:
+        atom_type = AtomType[request.type.upper()]
+    except KeyError:
         raise HTTPException(
             status_code=400,
-            detail=f"Invalid atom type: {request.type}"
+            detail=f"Invalid atom type: {request.type}. Valid types: {[t.name for t in AtomType]}"
         )
     
     atom = atomspace.create_atom(
@@ -152,11 +151,11 @@ async def get_atom(atom_id: str):
 async def create_link(request: LinkRequest):
     """Create a link between atoms"""
     try:
-        link_type = AtomType(request.type.upper())
-    except ValueError:
+        link_type = AtomType[request.type.upper()]
+    except KeyError:
         raise HTTPException(
             status_code=400,
-            detail=f"Invalid link type: {request.type}"
+            detail=f"Invalid link type: {request.type}. Valid types: {[t.name for t in AtomType]}"
         )
     
     link = atomspace.create_link(
@@ -198,12 +197,12 @@ async def list_atoms(
     # Apply filters
     if atom_type:
         try:
-            filter_type = AtomType(atom_type.upper())
+            filter_type = AtomType[atom_type.upper()]
             atoms = [a for a in atoms if a.type == filter_type]
-        except ValueError:
+        except KeyError:
             raise HTTPException(
                 status_code=400,
-                detail=f"Invalid atom type: {atom_type}"
+                detail=f"Invalid atom type: {atom_type}. Valid types: {[t.name for t in AtomType]}"
             )
     
     if name_pattern:
@@ -369,11 +368,11 @@ async def cognitive_process(request: CognitiveRequest):
 async def add_goal(request: GoalRequest):
     """Add a new goal to the cognitive agent"""
     try:
-        goal_type = GoalType(request.type.lower())
-    except ValueError:
+        goal_type = GoalType[request.type.upper()]
+    except KeyError:
         raise HTTPException(
             status_code=400,
-            detail=f"Invalid goal type: {request.type}"
+            detail=f"Invalid goal type: {request.type}. Valid types: {[t.name for t in GoalType]}"
         )
     
     goal_id = str(uuid.uuid4())

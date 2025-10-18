@@ -6,7 +6,7 @@ import pytest
 import asyncio
 from datetime import datetime
 
-from backend_opencog.core.atomspace import AtomSpace, Atom, AtomType
+from core.atomspace import AtomSpace, Atom, AtomType
 
 
 class TestAtomSpace:

@@ -11,7 +11,7 @@ from dataclasses import dataclass
 from enum import Enum
 import numpy as np
 
-from .atomspace import AtomSpace, Atom, AtomType
+from core.atomspace import AtomSpace, Atom, AtomType
 
 
 class MeTTaOperator(Enum):
