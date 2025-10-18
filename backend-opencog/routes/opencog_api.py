@@ -245,9 +245,12 @@ async def evaluate_metta(request: MeTTaQuery):
         }
     
     except Exception as e:
+        # Log the actual error for debugging
+        print(f"MeTTa evaluation error: {type(e).__name__}: {str(e)}")
+        
         raise HTTPException(
             status_code=400,
-            detail=f"MeTTa evaluation error: {str(e)}"
+            detail="MeTTa evaluation failed. Please check your expression syntax."
         )
 
 
@@ -265,9 +268,12 @@ async def define_metta_procedure(name: str, body: str):
         }
     
     except Exception as e:
+        # Log the actual error for debugging
+        print(f"Procedure definition error: {type(e).__name__}: {str(e)}")
+        
         raise HTTPException(
             status_code=400,
-            detail=f"Procedure definition error: {str(e)}"
+            detail="Failed to define MeTTa procedure. Please check your syntax."
         )
 
 
@@ -358,21 +364,26 @@ async def cognitive_process(request: CognitiveRequest):
         }
     
     except Exception as e:
+        # Log the actual error for debugging
+        print(f"Cognitive processing error: {type(e).__name__}: {str(e)}")
+        
         raise HTTPException(
             status_code=500,
-            detail=f"Cognitive processing error: {str(e)}"
+            detail="Cognitive processing failed. Please try again later."
         )
 
 
 @router.post("/opencog/agent/goals", tags=["Cognitive Agent"])
 async def add_goal(request: GoalRequest):
     """Add a new goal to the cognitive agent"""
+    # Convert request type to match enum name format
+    enum_name = request.type.upper()  # e.g., "generate_text" -> "GENERATE_TEXT"
     try:
-        goal_type = GoalType[request.type.upper()]
+        goal_type = GoalType[enum_name]
     except KeyError:
         raise HTTPException(
             status_code=400,
-            detail=f"Invalid goal type: {request.type}. Valid types: {[t.name for t in GoalType]}"
+            detail=f"Invalid goal type: {request.type}. Valid types: {[t.name.lower() for t in GoalType]}"
         )
     
     goal_id = str(uuid.uuid4())
@@ -498,9 +509,12 @@ async def query_knowledge(request: KnowledgeQuery):
         }
     
     except Exception as e:
+        # Log the actual error for debugging
+        print(f"Knowledge query error: {type(e).__name__}: {str(e)}")
+        
         raise HTTPException(
             status_code=500,
-            detail=f"Knowledge query error: {str(e)}"
+            detail="Knowledge query failed. Please check your query parameters."
         )
 
 
@@ -518,9 +532,12 @@ async def export_atomspace():
         }
     
     except Exception as e:
+        # Log the actual error for debugging
+        print(f"Export error: {type(e).__name__}: {str(e)}")
+        
         raise HTTPException(
             status_code=500,
-            detail=f"Export error: {str(e)}"
+            detail="Atomspace export failed. Please try again later."
         )
 
 
@@ -537,7 +554,10 @@ async def import_atomspace(data: Dict[str, Any]):
         }
     
     except Exception as e:
+        # Log the actual error for debugging
+        print(f"Import error: {type(e).__name__}: {str(e)}")
+        
         raise HTTPException(
             status_code=500,
-            detail=f"Import error: {str(e)}"
+            detail="Atomspace import failed. Please check your data format."
         )

@@ -317,10 +317,13 @@ async def health_check():
         return JSONResponse(content=system_status, status_code=200)
         
     except Exception as e:
+        # Log the actual error for debugging
+        print(f"Health check error: {type(e).__name__}: {str(e)}")
+        
         error_status = {
-            "status": "unhealthy",
+            "status": "unhealthy", 
             "timestamp": time.time(),
-            "error": str(e)
+            "error": "System health check failed"
         }
         return JSONResponse(content=error_status, status_code=503)
 
@@ -328,12 +331,15 @@ async def health_check():
 @app.exception_handler(Exception)
 async def global_exception_handler(request, exc):
     """Global exception handler"""
+    # Log the actual error for debugging
+    print(f"Internal error: {type(exc).__name__}: {str(exc)}")
+    
+    # Return sanitized error to user
     return JSONResponse(
         status_code=500,
         content={
             "error": "Internal server error",
-            "detail": str(exc),
-            "type": type(exc).__name__
+            "message": "An unexpected error occurred. Please try again later."
         }
     )
 

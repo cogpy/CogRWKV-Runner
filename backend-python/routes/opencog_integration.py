@@ -105,10 +105,13 @@ async def opencog_status():
             "opencog_data": status_data
         }
     except Exception as e:
+        # Log the actual error for debugging
+        print(f"OpenCog status check error: {type(e).__name__}: {str(e)}")
+        
         return {
             "available": False,
             "status": "error",
-            "error": str(e)
+            "error": "Unable to retrieve OpenCog backend status"
         }
 
 
@@ -152,9 +155,12 @@ async def opencog_cognitive_process(request: OpenCogRequest):
         return enhanced_result
         
     except Exception as e:
+        # Log the actual error for debugging
+        print(f"OpenCog processing error: {type(e).__name__}: {str(e)}")
+        
         raise HTTPException(
             status_code=500,
-            detail=f"OpenCog processing failed: {str(e)}"
+            detail="OpenCog processing failed. Please check your request and try again."
         )
 
 
@@ -222,13 +228,16 @@ async def opencog_enhanced_completion(
         }
         
     except Exception as e:
+        # Log the actual error for debugging
+        print(f"AGI processing error: {type(e).__name__}: {str(e)}")
+        
         # Fallback to standard processing on error
         return {
-            "text": f"[Error in AGI processing, fallback response for: {prompt}]",
+            "text": f"[Error in AGI processing, using fallback response for the provided prompt]",
             "backend": "rwkv_error_fallback",
             "tokens": max_tokens,
             "reasoning_used": False,
-            "error": str(e)
+            "error": "AGI processing temporarily unavailable"
         }
 
 
