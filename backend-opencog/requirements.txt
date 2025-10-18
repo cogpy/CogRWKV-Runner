@@ -1,0 +1,22 @@
+# Core dependencies from main backend
+torch
+jinja2==3.1.6
+setuptools==69.5.1
+rwkv==0.8.29
+fastapi==0.109.1
+uvicorn==0.23.2
+sse-starlette==1.6.5
+pydantic==2.4.2
+psutil==5.9.6
+numpy==1.24.4
+safetensors==0.4.0
+python-multipart==0.0.7
+
+# OpenCog and AGI-specific dependencies
+hyperon-experimental>=0.1.0  # OpenCog Hyperon core
+metta-lang>=0.1.0           # MeTTa language support
+networkx>=3.0               # For graph operations (Atomspace representation)
+redis>=4.0.0               # For distributed atomspace
+asyncio-mqtt>=0.11.0       # For inter-agent communication
+python-benedict>=0.33.0    # For nested data structures
+pyyaml>=6.0                # For configuration

@@ -1,0 +1,50 @@
+# OpenCog-RWKV Backend Configuration
+
+server:
+  host: "127.0.0.1"
+  port: 8001
+  debug: false
+  workers: 1
+  
+atomspace:
+  initial_capacity: 10000
+  attention_decay_rate: 0.99
+  truth_value_threshold: 0.1
+  confidence_threshold: 0.1
+  
+cognitive_agent:
+  processing_cycles_per_second: 10
+  max_active_goals: 50
+  goal_timeout_minutes: 60
+  learning_rate: 0.1
+  confidence_threshold: 0.6
+  
+metta:
+  max_expression_depth: 100
+  evaluation_timeout_seconds: 30
+  trace_enabled: true
+  max_trace_size: 1000
+  
+rwkv:
+  model_path: null
+  config_path: null
+  default_max_tokens: 150
+  default_temperature: 0.8
+  default_top_p: 0.3
+  generation_timeout_seconds: 60
+  
+knowledge:
+  demo_mode: false
+  auto_save_interval_minutes: 30
+  backup_count: 5
+  
+logging:
+  level: "INFO"
+  file: "opencog_backend.log"
+  max_size_mb: 100
+  backup_count: 3
+  
+integration:
+  main_backend_url: "http://127.0.0.1:8000"
+  sync_interval_seconds: 60
+  fallback_enabled: true
